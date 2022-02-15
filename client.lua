@@ -13,8 +13,30 @@ AddEventHandler('onResourceStart', function(resourceName)
     BackLoop()
 end)
 
+AddEventHandler('onResourceStop', function(resourceName)
+	if (GetCurrentResourceName() ~= resourceName) then return end
+    removeAllBackItems()
+    CurrentBackItems = {}
+    TempBackItems = {}
+    currentWeapon = nil
+    slots = 40
+    s = {}
+    checking = false
+end)
+
 RegisterNetEvent("backitems:start", function()
+    Wait(4000)
     BackLoop()
+end)
+
+RegisterNetEvent("QBCore:Client:OnPlayerUnload", function()
+    removeAllBackItems()
+    CurrentBackItems = {}
+    TempBackItems = {}
+    currentWeapon = nil
+    slots = 40
+    s = {}
+    checking = false
 end)
 
 -- RegisterCommand("displayBackItems", function(source, args, rawCommand)
