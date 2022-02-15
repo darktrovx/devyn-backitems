@@ -57,15 +57,15 @@ It should now look like this.
 end
 ```
 
-Also add ```TriggerEvent("backitems:displayItems", true)``` to the closeMenu function
+Also add ```TriggerEvent("backitems:displayItems", true)``` to the close NUI callback
 ```
-function closeMenu()
-    SendNUIMessage({
-        action = "close",
-    })
+RegisterNUICallback('close', function()
+    SetNuiFocus(false, false)
+    creatingCharacter = false
     disableCam()
     TriggerEvent("backitems:displayItems", true)
-end
+    FreezeEntityPosition(PlayerPedId(), false)
+end)
 ```
 
 If you use fivem-appearance you need to add the triggers whenever you call the startPlayerCustomization export
