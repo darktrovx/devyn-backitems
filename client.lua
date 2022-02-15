@@ -15,46 +15,23 @@ end)
 
 AddEventHandler('onResourceStop', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then return end
-    removeAllBackItems()
-    CurrentBackItems = {}
-    TempBackItems = {}
-    currentWeapon = nil
-    slots = 40
-    s = {}
-    checking = false
-end)
-
-RegisterNetEvent("backitems:start", function()
-    Wait(4000)
-    BackLoop()
+    resetItems()
 end)
 
 RegisterNetEvent("QBCore:Client:OnPlayerUnload", function()
-    removeAllBackItems()
-    CurrentBackItems = {}
-    TempBackItems = {}
-    currentWeapon = nil
-    slots = 40
-    s = {}
-    checking = false
+    resetItems()
 end)
 
--- RegisterCommand("displayBackItems", function(source, args, rawCommand)
---     TriggerEvent("backitems:displayItems", true)
--- end)
-
-
--- RegisterCommand("hideBackItems", function(source, args, rawCommand)
---     TriggerEvent("backitems:displayItems", false)
--- end)
-
+RegisterNetEvent("backitems:start", function()
+    Wait(10000)
+    BackLoop()
+end)
 
 RegisterNetEvent("backitems:displayItems", function(toggle)
     if toggle then 
         for k,v in pairs(TempBackItems) do 
             createBackItem(k)
         end
-        checking = true
         BackLoop()
     else 
         TempBackItems = CurrentBackItems
@@ -66,19 +43,30 @@ RegisterNetEvent("backitems:displayItems", function(toggle)
     end
 end)
 
+function resetItems()
+    removeAllBackItems()
+    CurrentBackItems = {}
+    TempBackItems = {}
+    currentWeapon = nil
+    s = {}
+    checking = false
+end
+
 function BackLoop()
     print("[Backitems]: Starting Loop")
+    checking = true
     CreateThread(function()
         while checking do
             local player = QBCore.Functions.GetPlayerData()
             while player == nil do 
                 player = QBCore.Functions.GetPlayerData()
+                Wait(500)
             end
             for i = 1, slots do
                 s[i] = player.items[i]
             end
             check()
-            Wait(500)
+            Wait(1000)
         end
     end)
 end
