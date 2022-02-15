@@ -1,5 +1,6 @@
 # devyn-backitems
 FiveM Lua Script for displaying items on the players back.
+NOTE: I do not provide any support for this. Just posted because a lot of people asked for it.
 
 ![image](https://user-images.githubusercontent.com/7463741/154128851-a8325962-1ef3-4a08-ad5e-048dcb0e023b.png)
 
