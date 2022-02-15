@@ -70,7 +70,8 @@ end)
 
 If you use fivem-appearance you need to add the triggers whenever you call the startPlayerCustomization export
 
-```	TriggerEvent("backitems:displayItems", false)
+```	
+	TriggerEvent("backitems:displayItems", false)
 	exports['fivem-appearance']:startPlayerCustomization(function (appearance)
 		if appearance then
 			TriggerServerEvent('fivem-appearance:save', appearance)
