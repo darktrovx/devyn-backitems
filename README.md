@@ -26,6 +26,11 @@ Setup:
     end
 ```
 
+If you use cd_spawnselect you need to edit the function "HasFullySpanwedIn" in the client_customize_me.lua and add  ```TriggerEvent("backitems:start")```
+
+![image](https://user-images.githubusercontent.com/7463741/154318777-3c59ce86-47c6-4f11-b51e-5df52666ed10.png)
+
+
 If you use qb-clothing you need to add the follow event to the openMenu function.
 
 ```TriggerEvent("backitems:displayItems", false)``` 
