@@ -112,8 +112,9 @@ function createBackItem(item)
             end
             SetModelAsNoLongerNeeded(model)
             CurrentBackItems[item] = CreateObject(GetHashKey(model), 1.0, 1.0, 1.0, true, true, false)   
-            if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then i["y"] = i["y"] + 0.035 end
-            AttachEntityToEntity(CurrentBackItems[item], ped, bone, i["x"], i["y"], i["z"], i["x_rotation"], i["y_rotation"], i["z_rotation"], 0, 1, 0, 1, 0, 1)
+            local y = i["y"]  
+            if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then y = y + 0.035 end
+            AttachEntityToEntity(CurrentBackItems[item], ped, bone, i["x"], y, i["z"], i["x_rotation"], i["y_rotation"], i["z_rotation"], 0, 1, 0, 1, 0, 1)
 	end
     end
 end
