@@ -99,7 +99,6 @@ function check()
     end
 end
 
-
 function createBackItem(item)
     if not CurrentBackItems[item] then
         if BackItems[item] then 
@@ -113,8 +112,9 @@ function createBackItem(item)
             end
             SetModelAsNoLongerNeeded(model)
             CurrentBackItems[item] = CreateObject(GetHashKey(model), 1.0, 1.0, 1.0, true, true, false)   
-            AttachEntityToEntity(CurrentBackItems[item], ped, bone, i["x"], i["y"], i["z"], i["x_rotation"], i["y_rotation"], i["z_rotation"], false, false, false, false, 2, true)
-        end
+            if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then i["y"] = i["y"] + 0.035 end
+            AttachEntityToEntity(CurrentBackItems[item], ped, bone, i["x"], i["y"], i["z"], i["x_rotation"], i["y_rotation"], i["z_rotation"], 0, 1, 0, 1, 0, 1)
+	end
     end
 end
 
