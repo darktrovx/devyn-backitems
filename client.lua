@@ -115,6 +115,7 @@ function createBackItem(item)
             local y = i["y"]  
             if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then y = y + 0.035 end
             AttachEntityToEntity(CurrentBackItems[item], ped, bone, i["x"], y, i["z"], i["x_rotation"], i["y_rotation"], i["z_rotation"], 0, 1, 0, 1, 0, 1)
+            SetEntityCompletelyDisableCollision(CurrentBackItems[item], false, true)		
 	end
     end
 end
