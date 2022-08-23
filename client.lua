@@ -52,6 +52,12 @@ function resetItems()
     checking = false
 end
 
+RegisterNetEvent("backitems:showagain", function()
+    resetItems()
+    Wait(2000)
+    BackLoop()
+end)
+
 function BackLoop()
     print("[Backitems]: Starting Loop")
     checking = true
