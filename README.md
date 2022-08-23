@@ -6,9 +6,12 @@ NOTE: I do not provide any support for this. Just posted because a lot of people
 
 If you want to add/remove/change model/backplacement it can be done in the BackItems.lua.
 
-Setup:
-  in qb-spawn in client.lua edit the function PostSpawnPlayer and add ```TriggerEvent("backitems:start")``` to the last line.
-  It should now look like this.
+## Spawn Setup
+
+### qb-spawn Setup
+
+In qb-spawn in client.lua, edit the function PostSpawnPlayer and add ```TriggerEvent("backitems:start")``` to the last line.
+
 ```lua
     local function PostSpawnPlayer(ped)
     FreezeEntityPosition(ped, false)
@@ -24,10 +27,15 @@ Setup:
     end
 ```
 
-If you use cd_spawnselect you need to edit the function "HasFullySpanwedIn" in the client_customize_me.lua and add  ```TriggerEvent("backitems:start")```
+### cd_spawnselect Setup
+
+If you use cd_spawnselect you need to edit the function "HasFullySpanwedIn" in the client_customize_me.lua and add ```TriggerEvent("backitems:start")```
 
 ![image](https://user-images.githubusercontent.com/7463741/154318777-3c59ce86-47c6-4f11-b51e-5df52666ed10.png)
 
+## Clothing Setup
+
+### qb-clothing Setup
 
 If you use qb-clothing you need to add the follow event to the openMenu function.
 
@@ -71,6 +79,8 @@ RegisterNUICallback('close', function()
 end)
 ```
 
+### fivem-appearance Setup
+
 If you use fivem-appearance you need to add the triggers whenever you call the startPlayerCustomization export
 
 ```lua	
@@ -88,7 +98,7 @@ If you use fivem-appearance you need to add the triggers whenever you call the s
 
 ## Show Again Client Event
 
-### FiveM-Appearance
+### fivem-appearance Setup
 
 If you are using fivem-appearance, you must add the triggers when you call the LoadPlayerUniform() export
 
@@ -179,4 +189,24 @@ RegisterNetEvent('fivem-appearance:client:reloadSkin', function()
         ResetRechargeMultipliers()
     end)
 end)
+```
+
+### qb-apartment Fix / Setup
+
+Add the event to your EnterApartment and LeaveApartment functions after ```TriggerServerEvent("QBCore:Server:SetMetaData", "currentapartment", nil)```
+
+Something like this:
+
+* EnterApartment (Twice)
+```lua
+            TriggerServerEvent("QBCore:Server:SetMetaData", "currentapartment", CurrentApartment)
+            TriggerEvent("backitems:showagain")
+        end
+```
+
+* LeaveApartment
+```lua
+        TriggerServerEvent("QBCore:Server:SetMetaData", "currentapartment", nil)
+        TriggerEvent("backitems:showagain")
+    end)
 ```
