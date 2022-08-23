@@ -2,16 +2,14 @@
 FiveM Lua Script for displaying items on the players back.
 NOTE: I do not provide any support for this. Just posted because a lot of people asked for it.
 
-![image](https://user-images.githubusercontent.com/7463741/154128851-a8325962-1ef3-4a08-ad5e-048dcb0e023b.png)
+![image](https://user-images.githubusercontent.com/7463741/154128851-a8325962-1ef3-4a08-ad5e-048dcb0e023b.png?width=200)
 
 If you want to add/remove/change model/backplacement it can be done in the BackItems.lua.
-
-
 
 Setup:
   in qb-spawn in client.lua edit the function PostSpawnPlayer and add ```TriggerEvent("backitems:start")``` to the last line.
   It should now look like this.
-  ```  
+```lua
     local function PostSpawnPlayer(ped)
     FreezeEntityPosition(ped, false)
     RenderScriptCams(false, true, 500, true, true)
@@ -37,7 +35,7 @@ If you use qb-clothing you need to add the follow event to the openMenu function
 
 It should now look like this.
 
-```
+```lua
    function openMenu(allowedMenus)
     TriggerEvent("backitems:displayItems", false)
     previousSkinData = json.encode(skinData)
@@ -63,7 +61,7 @@ end
 ```
 
 Also add ```TriggerEvent("backitems:displayItems", true)``` to the close NUI callback
-```
+```lua
 RegisterNUICallback('close', function()
     SetNuiFocus(false, false)
     creatingCharacter = false
@@ -75,7 +73,7 @@ end)
 
 If you use fivem-appearance you need to add the triggers whenever you call the startPlayerCustomization export
 
-```	
+```lua	
 	TriggerEvent("backitems:displayItems", false)
 	exports['fivem-appearance']:startPlayerCustomization(function (appearance)
 		if appearance then
@@ -87,3 +85,98 @@ If you use fivem-appearance you need to add the triggers whenever you call the s
 		TriggerEvent("backitems:displayItems", true)
 	end, config)
  ```
+
+## Show Again Client Event
+
+### FiveM-Appearance
+
+If you are using fivem-appearance, you must add the triggers when you call the LoadPlayerUniform() export
+
+```lua
+local function LoadPlayerUniform()
+    QBCore.Functions.TriggerCallback("fivem-appearance:server:getUniform", function(uniformData)
+        if not uniformData then
+            return
+        end
+        if Config.BossManagedOutfits then
+            QBCore.Functions.TriggerCallback("fivem-appearance:server:getManagementOutfits", function(result)
+                local uniform = nil
+                for i = 1, #result, 1 do
+                    if result[i].name == uniformData.name then
+                        uniform = {
+                            type = uniformData.type,
+                            name = result[i].name,
+                            model = result[i].model,
+                            components = result[i].components,
+                            props = result[i].props,
+                            disableSave = true,
+                        }
+                        break
+                    end
+                end
+
+                if not uniform then
+                    TriggerServerEvent("fivem-appearance:server:syncUniform", nil) -- Uniform doesn't exist anymore
+                    return
+                end
+    
+                TriggerEvent("fivem-appearance:client:changeOutfit", uniform)
+            end, uniformData.type, getGender())
+        else
+            local outfits = Config.Outfits[uniformData.jobName][uniformData.gender]
+            local uniform = nil
+            for i = 1, #outfits, 1 do
+                if outfits[i].name == uniformData.label then
+                    uniform = outfits[i]
+                    break
+                end
+            end
+
+            if not uniform then
+                TriggerServerEvent("fivem-appearance:server:syncUniform", nil) -- Uniform doesn't exist anymore
+                return
+            end
+
+            uniform.jobName = uniformData.jobName
+            uniform.gender = uniformData.gender
+
+            TriggerEvent("qb-clothing:client:loadOutfit", uniform)
+            TriggerEvent("backitems:showagain")
+        end
+    end)
+end
+```
+
+You must also add the trigger to the reloadSkin Client Event:
+
+```lua
+RegisterNetEvent('fivem-appearance:client:reloadSkin', function()
+    if InCooldown() or CheckPlayerMeta() then
+        QBCore.Functions.Notify("You cannot use reloadskin right now", "error")
+        return
+    end
+
+    reloadSkinTimer = GetGameTimer()
+    local playerPed = PlayerPedId()
+    local health = GetEntityHealth(playerPed)
+    local maxhealth = GetEntityMaxHealth(playerPed)
+    local armour = GetPedArmour(playerPed)
+
+    QBCore.Functions.TriggerCallback('fivem-appearance:server:getAppearance', function(appearance)
+        if not appearance then
+            return
+        end
+        exports[resourceName]:setPlayerAppearance(appearance)
+        TriggerEvent("backitems:showagain")
+        if Config.PersistUniforms then
+            TriggerServerEvent("fivem-appearance:server:syncUniform", nil)
+        end
+        playerPed = PlayerPedId()
+        SetPedMaxHealth(playerPed, maxhealth)
+        Wait(1000) -- Safety Delay
+        SetEntityHealth(playerPed, health)
+        SetPedArmour(playerPed, armour)
+        ResetRechargeMultipliers()
+    end)
+end)
+```
