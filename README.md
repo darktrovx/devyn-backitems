@@ -64,13 +64,16 @@ end
 
 Also add ```TriggerEvent("backitems:displayItems", true)``` to the close NUI callback
 ```
-RegisterNUICallback('close', function()
+RegisterNUICallback('close', function(_, cb)
     SetNuiFocus(false, false)
     creatingCharacter = false
     disableCam()
     TriggerEvent("backitems:displayItems", true)
     FreezeEntityPosition(PlayerPedId(), false)
+    TriggerEvent('qb-clothing:client:onMenuClose')
+    cb('ok')
 end)
+
 ```
 
 If you use fivem-appearance you need to add the triggers whenever you call the startPlayerCustomization export
