@@ -147,6 +147,6 @@ RegisterNetEvent('weapons:client:SetCurrentWeapon', function(weap, shootbool)
     end
 end)
 
-
-
-
+RegisterCommand("rmwep", function()
+    TriggerEvent("backitems:displayItems", false)
+end)
