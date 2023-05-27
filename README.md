@@ -38,14 +38,12 @@ If you use qb-clothing you need to add the follow event to the openMenu function
 It should now look like this.
 
 ```
-   function openMenu(allowedMenus)
+local function openMenu(allowedMenus)
     TriggerEvent("backitems:displayItems", false)
     previousSkinData = json.encode(skinData)
     creatingCharacter = true
-
-    local PlayerData = QBCore.Functions.GetPlayerData()
+    PlayerData = QBCore.Functions.GetPlayerData()
     local trackerMeta = PlayerData.metadata["tracker"]
-
     GetMaxValues()
     SendNUIMessage({
         action = "open",
@@ -55,9 +53,7 @@ It should now look like this.
     })
     SetNuiFocus(true, true)
     SetCursorLocation(0.9, 0.25)
-
     FreezeEntityPosition(PlayerPedId(), true)
-
     enableCam()
 end
 ```
